@@ -1,3 +1,4 @@
+// dayFilter.js
 function filterByNoClassDays(schedules, noClassDays) {
     const banned = new Set(noClassDays);
   

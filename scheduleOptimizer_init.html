@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Course Picker</title>
+
+<style>
+  body { font-family: Arial; padding: 20px; }
+  #courseInput { width: 260px; padding: 8px; font-size: 15px; }
+  #runBtn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    background:#007bff;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+    border:none;
+  }
+  #runBtn:hover { background:#005fcc; }
+  #result { margin-top: 18px; white-space: pre; background:#f7faff; padding:12px; border-radius:6px; }
+</style>
+</head>
+
+<body>
+
+<h2>Enter Courses</h2>
+
+<input id="courseInput" placeholder="Example: CPSC110, MATH100, CPSC121" />
+<br>
+<button id="runBtn">Generate Top Schedules</button>
+
+<h3>Output</h3>
+<div id="result">Waiting for input...</div>
+
+<!-- load optimizer -->
+<script type="module" src="./scheduleOptimizer_init.js"></script>
+
+<script>
+  document.getElementById("runBtn").onclick = () => {
+    const raw = document.getElementById("courseInput").value.trim();
+    if (!raw) {
+      alert("Please enter at least one course.");
+      return;
+    }
+
+    // convert input → ["CPSC110","MATH100"]
+    const courseList = raw.split(",").map(c => c.trim().toUpperCase());
+
+    if (!window.runSchedule) {
+      alert("runSchedule not loaded!");
+      return;
+    }
+
+    const result = window.runSchedule(courseList, true); // true => return mode
+    document.getElementById("result").textContent = JSON.stringify(result, null, 2);
+  };
+</script>
+
+</body>
+</html>
