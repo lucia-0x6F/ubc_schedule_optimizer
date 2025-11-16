@@ -1,3 +1,4 @@
+// test.html
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,12 +9,14 @@
     <h1>checkConflictFn.js 测试页</h1>
     <p>打开 DevTools 的 Console 来调用 <code>validateSchedule</code>。</p>
 
-    <script type="module">
+   <script type="module">
   import { validateSchedule } from "./checkConflictFn.js";
   import { generateScheduleArrays } from "./buildSchedules.js";
+  import { optimizeSchedules } from "./scheduleOptimizer.js";
 
   window.validateSchedule = validateSchedule;
   window.generateScheduleArrays = generateScheduleArrays;
+  window.optimizeSchedules = optimizeSchedules;
 </script>
   </body>
 </html>

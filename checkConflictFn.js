@@ -1,3 +1,4 @@
+// checkConflictFn.js
 import { courseData } from "./coursedata.js";
 
 function timeToMinutes(timeStr) {
