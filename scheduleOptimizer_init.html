@@ -6,52 +6,111 @@
 
 <style>
   body { font-family: Arial; padding: 20px; }
-  #courseInput { width: 260px; padding: 8px; font-size: 15px; }
+  #courseInput { width: 200px; padding: 8px; font-size: 15px; }
+
   #runBtn {
-    margin-top: 10px;
     padding: 8px 14px;
     background:#007bff;
     color:white;
     border-radius:6px;
     cursor:pointer;
     border:none;
+    margin-left: 8px;
   }
   #runBtn:hover { background:#005fcc; }
-  #result { margin-top: 18px; white-space: pre; background:#f7faff; padding:12px; border-radius:6px; }
+
+  #selectedList div {
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:6px 10px;
+    background:#f3f6ff;
+    border-radius:6px;
+    margin-top:6px;
+  }
+  .removeBtn {
+    background:red;
+    border:none;
+    color:white;
+    padding:4px 8px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  #result {
+    margin-top: 18px;
+    white-space: pre;
+    background:#f7faff;
+    padding:12px;
+    border-radius:6px;
+  }
 </style>
 </head>
 
 <body>
 
-<h2>Enter Courses</h2>
+<h2>Enter Courses One by One (Press Enter)</h2>
 
-<input id="courseInput" placeholder="Example: CPSC110, MATH100, CPSC121" />
-<br>
+<input id="courseInput" placeholder="e.g. CPSC110" />
 <button id="runBtn">Generate Top Schedules</button>
+
+<h3>Selected Courses</h3>
+<div id="selectedList"></div>
 
 <h3>Output</h3>
 <div id="result">Waiting for input...</div>
 
-<!-- load optimizer -->
 <script type="module" src="./scheduleOptimizer_init.js"></script>
 
 <script>
-  document.getElementById("runBtn").onclick = () => {
-    const raw = document.getElementById("courseInput").value.trim();
-    if (!raw) {
-      alert("Please enter at least one course.");
-      return;
-    }
+  const selectedCourses = [];
+  const input = document.getElementById("courseInput");
+  const listDiv = document.getElementById("selectedList");
 
-    // convert input → ["CPSC110","MATH100"]
-    const courseList = raw.split(",").map(c => c.trim().toUpperCase());
+  function renderList() {
+    listDiv.innerHTML = "";
+    selectedCourses.forEach((course, index) => {
+      const item = document.createElement("div");
+      item.innerHTML = `
+        <span>${course}</span>
+        <button class="removeBtn" data-index="${index}">X</button>
+      `;
+      listDiv.appendChild(item);
+    });
+
+    document.querySelectorAll(".removeBtn").forEach(btn => {
+      btn.onclick = () => {
+        selectedCourses.splice(btn.dataset.index, 1);
+        renderList();
+      };
+    });
+  }
+
+  // Press ENTER to add course
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const course = input.value.trim().toUpperCase();
+      if (!course) return;
+      if (selectedCourses.includes(course)) {
+        alert("Already added.");
+        input.value = "";
+        return;
+      }
+      selectedCourses.push(course);
+      input.value = "";
+      renderList();
+    }
+  });
+
+  // Run schedule
+  document.getElementById("runBtn").onclick = () => {
+    if (selectedCourses.length === 0) return alert("No courses selected!");
 
     if (!window.runSchedule) {
       alert("runSchedule not loaded!");
       return;
     }
 
-    const result = window.runSchedule(courseList, true); // true => return mode
+    const result = window.runSchedule(selectedCourses, true);
     document.getElementById("result").textContent = JSON.stringify(result, null, 2);
   };
 </script>
