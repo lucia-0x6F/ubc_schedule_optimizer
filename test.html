@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS Test Page</title>
+  </head>
+  <body>
+    <h1>checkConflictFn.js 测试页</h1>
+    <p>打开 DevTools 的 Console 来调用 <code>validateSchedule</code>。</p>
+
+    <!-- 把你的模块文件加载进来 -->
+    <script type="module">
+      import { validateSchedule } from './checkConflictFn.js';
+
+      // 挂到 window 上，保证在控制台可以直接用
+      window.validateSchedule = validateSchedule;
+    </script>
+  </body>
+</html>

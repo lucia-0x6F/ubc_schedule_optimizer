@@ -1,4 +1,4 @@
-import { courseData } from "./coursedata.js";
+import { courseData } from "../coursedata.js";
 const newArray = Object.values(courseData).flat();
 
 // UBC classes end 10 mins early so time intervals are open (no equality conflict)
@@ -87,11 +87,3 @@ function validateSchedule(selectedCourses) {
 
 const selectedCourses = getUserSelectedCourses();
 console.log(validateSchedule(selectedCourses));
-
-window.validateSchedule = validateSchedule;
-window.getUserSelectedCourses = getUserSelectedCourses;
-window.getCourseSections = getCourseSections;
-window.hasConflict = hasConflict;
-
-export { validateSchedule };
-
