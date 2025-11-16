@@ -30,48 +30,51 @@ const styles = {
   bar: {
     position: "sticky",
     top: 0,
-    zIndex: 10,
+    zIndex: 20,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
 
-    padding: "6px 20px",
-    background: "#dfffe0", // light green
+    padding: "8px 24px",
+    background: "linear-gradient(135deg, #dfffe0, #c7f3ff)", // soft 3D gradient
     color: "#333",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+    boxShadow: "0 6px 18px rgba(0, 0, 0, 0.12)",             // deeper shadow
+    backdropFilter: "blur(8px)",
   },
 
   left: {
     display: "flex",
     alignItems: "center",
-    gap: 6,
+    gap: 8,
   },
 
   logo: {
-    height: "45px",   // ⭐ large logo
+    height: "45px",
     width: "auto",
     objectFit: "contain",
+    filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",       // logo shadow
   },
 
-  /* Keep Opti + Schedule tight together */
   titleWrapper: {
     display: "flex",
-    alignItems: "baseline",   // ⭐ aligns “Schedule” to baseline of Opti
-    gap: 3,                   // ⭐ tiny gap only
+    alignItems: "baseline",
+    gap: 4,
   },
 
   brandMain: {
-    fontSize: "28px",         // ⭐ larger
+    fontSize: "28px",
     fontWeight: 700,
-    color: "#3B82F6",         // blue
+    color: "#3B82F6",
     lineHeight: 1,
+    textShadow: "0 1px 2px rgba(0,0,0,0.25)",                // subtle 3D text
   },
 
   brandSub: {
-    fontSize: "18px",         // ⭐ smaller than Opti
+    fontSize: "18px",
     fontWeight: 600,
-    color: "#16A34A",         // green
-    marginTop: "4px",         // ⭐ visually aligns with Opti
+    color: "#16A34A",
+    marginTop: "4px",
+    textShadow: "0 1px 2px rgba(0,0,0,0.2)",
   },
 
   right: {
@@ -82,11 +85,14 @@ const styles = {
   button: {
     backgroundColor: "#ffffff",
     color: "#333",
-    padding: "6px 14px",
+    padding: "6px 16px",
     borderRadius: "999px",
-    border: "1px solid #c7c7c7",
+    border: "1px solid #d4d4d4",
     fontSize: "13px",
     cursor: "pointer",
     whiteSpace: "nowrap",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.15)",                 // 3D pill button
+    transform: "translateY(0)",
+    transition: "transform 0.15s ease, box-shadow 0.15s ease",
   },
 };

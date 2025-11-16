@@ -127,15 +127,29 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     gap: "32px",
+    background:
+      "radial-gradient(circle at top left, #f0f9ff, #fefce8 40%, #f9fafb 80%)", // soft background
+    minHeight: "calc(100vh - 60px)",
   },
 
   leftColumn: {
     flex: "0 0 360px",
+    background: "transparent",   // ⭐ removes the rectangle completely
+    padding: "0px",
+    boxShadow: "none",
+    border: "none",
   },
+  
 
   rightColumn: {
     flex: 1,
     minHeight: "400px",
+    backgroundColor: "rgba(255,255,255,0.95)",
+    borderRadius: "20px",
+    padding: "16px",
+    boxShadow: "0 12px 30px rgba(0,0,0,0.10)",
+    border: "1px solid rgba(148, 163, 184, 0.25)",
+    backdropFilter: "blur(6px)",
   },
 
   // Search bar
@@ -143,32 +157,30 @@ const styles = {
     display: "flex",
     alignItems: "center",
     width: "100%",
-    padding: "10px 16px",
+    padding: "10px 18px",
     borderRadius: "999px",
-    backgroundColor: "#dcdcdc",
-    boxShadow: "0 0 8px rgba(0,0,0,0.05)",
+    background: "linear-gradient(135deg, #f1f5f9, #ffffff)",
+    border: "1px solid #d3d3d3",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
   },
-  icon: {
-    marginRight: "8px",
-    fontSize: "16px",
-    color: "#777",
-  },
+  
   input: {
     flex: 1,
     border: "none",
     outline: "none",
     background: "transparent",
     fontSize: "14px",
+    color: "#333",
   },
 
   // Search results list
   resultsList: {
-    marginTop: "8px",
+    marginTop: "10px",
     padding: "4px 0",
     listStyle: "none",
-    borderRadius: "12px",
+    borderRadius: "16px",
     backgroundColor: "#ffffff",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+    boxShadow: "0 8px 20px rgba(15,23,42,0.15)",
     maxHeight: "220px",
     overflowY: "auto",
   },
@@ -186,27 +198,29 @@ const styles = {
 
   // Selected courses section
   selectedWrapper: {
-    marginTop: "16px",
+    marginTop: "18px",
   },
   selectedTitle: {
     fontSize: "14px",
     fontWeight: 600,
-    marginBottom: "16px", // extra spacing between title and chips
+    marginBottom: "16px",
   },
   selectedList: {
     display: "flex",
     flexWrap: "wrap",
-    gap: "8px",
+    gap: "10px",
   },
   selectedChip: {
     display: "inline-flex",
     alignItems: "center",
     gap: "6px",
-    padding: "4px 10px",
+    padding: "6px 12px",
     borderRadius: "999px",
-    backgroundColor: "#3B82F6",
+    background:
+      "linear-gradient(135deg, #3B82F6, #22C55E)",             // colorful chip
     color: "#ffffff",
     fontSize: "13px",
+    boxShadow: "0 4px 10px rgba(37, 99, 235, 0.35)",
   },
   deleteButton: {
     border: "none",
@@ -217,4 +231,3 @@ const styles = {
     lineHeight: 1,
   },
 };
-
