@@ -9,9 +9,11 @@
     <p>打开 DevTools 的 Console 来调用 <code>validateSchedule</code>。</p>
 
     <script type="module">
-  import { validateSchedule, generateScheduleArrays } from './checkConflictFn.js';
+  import { validateSchedule } from "./checkConflictFn.js";
+  import { generateScheduleArrays } from "./buildSchedules.js";
+
   window.validateSchedule = validateSchedule;
   window.generateScheduleArrays = generateScheduleArrays;
-    </script>
+</script>
   </body>
 </html>
