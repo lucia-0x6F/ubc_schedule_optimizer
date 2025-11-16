@@ -1,7 +1,9 @@
 import { courseData } from "./coursedata.js";
 
-// ---- helper functions ----
-const newArray = Object.values(courseData).flat();
+function timeToMinutes(timeStr) {
+  const [hour, min] = timeStr.split(":").map(Number);
+  return hour * 60 + min;
+}
 
 // UBC classes end 10 mins early so time intervals are open (no equality conflict)
 function timeHasConflict(Start1, End1, Start2, End2) {
@@ -9,41 +11,21 @@ function timeHasConflict(Start1, End1, Start2, End2) {
   const e1 = timeToMinutes(End1);
   const s2 = timeToMinutes(Start2);
   const e2 = timeToMinutes(End2);
-  return !(e2 < s1 || s2 > e1);
+  return !(e2 <= s1 || s2 >= e1);
 }
 
-function timeToMinutes(timeStr) {
-  const [hour, min] = timeStr.split(":").map(Number);
-  return hour * 60 + min;
+function dayHasConflict(d1, d2) {
+  return d1.some(day => d2.includes(day));
 }
 
-function dayHasConflict(dayArray1, dayArray2) {
-  return dayArray1.some(day => dayArray2.includes(day));
+function hasConflict(a, b) {
+  return dayHasConflict(a.days, b.days) && timeHasConflict(a.start, a.end, b.start, b.end);
 }
 
-// conflict only if: same day + overlapping time
-function hasConflict(course1, course2) {
-  return (
-    dayHasConflict(course1.days, course2.days) &&
-    timeHasConflict(course1.start, course1.end, course2.start, course2.end)
-  );
-}
-
-// get all sections of given course name
-function getCourseSections(name) {
-  return newArray.filter(item => item.name === name);
-}
-
-// one course cannot pick two sections of same type
-function eachTypeNoConflict(selectedArray) {
-  for (let i = 0; i < selectedArray.length; i++) {
-    for (let j = i + 1; j < selectedArray.length; j++) {
-      if (
-        selectedArray[i].name === selectedArray[j].name &&
-        selectedArray[i].type === selectedArray[j].type
-      ) {
-        return false;
-      }
+function checkAllConflicts(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (hasConflict(arr[i], arr[j])) return false;
     }
   }
   return true;
@@ -61,38 +43,54 @@ function checkAllConflicts(selectedArray) {
 
 // ---- validate schedule ----
 function validateSchedule(selected) {
-  if (!eachTypeNoConflict(selected)) return "Invalid: cannot take same-type sections";
-  if (!checkAllConflicts(selected)) return "Invalid: time conflict exists";
-  return "Valid schedule!";
+  return checkAllConflicts(selected) ? "Valid schedule!" : "Invalid";
 }
 
-// ---- generate schedules ----
-function generateScheduleArrays() {
-  const courseNames = Object.keys(courseData);
+function generateScheduleArrays(selectedCourses) {
   const results = [];
 
-  function backtrack(index, current) {
-    if (index === courseNames.length) {
+  function backtrackCourse(courseIndex, current) {
+    if (courseIndex === selectedCourses.length) {
       if (validateSchedule(current) === "Valid schedule!") {
         results.push([...current]);
       }
       return;
     }
 
-    const sections = courseData[courseNames[index]];
+    const courseName = selectedCourses[courseIndex];
+    const sections = courseData[courseName];
+
+    const typeGroups = {};
     for (let sec of sections) {
-      current.push(sec);
-      if (validateSchedule(current) === "Valid schedule!") {
-        backtrack(index + 1, current);
-      }
-      current.pop();
+      if (!typeGroups[sec.type]) typeGroups[sec.type] = [];
+      typeGroups[sec.type].push(sec);
     }
+
+    const types = Object.keys(typeGroups);
+
+    function backtrackType(typeIndex) {
+      if (typeIndex === types.length) {
+        backtrackCourse(courseIndex + 1, current);
+        return;
+      }
+
+      const group = typeGroups[types[typeIndex]];
+      for (let sec of group) {
+        current.push(sec);
+        if (checkAllConflicts(current)) backtrackType(typeIndex + 1);
+        current.pop();
+      }
+    }
+
+    backtrackType(0);
   }
 
-  backtrack(0, []);
-
+  backtrackCourse(0, []);
   return results;
 }
 
-// ---- export to HTML ----
-export { validateSchedule, generateScheduleArrays };
+window.generateScheduleArrays = generateScheduleArrays;
+window.validateSchedule = validateSchedule;
+export { generateScheduleArrays, validateSchedule };
+
+

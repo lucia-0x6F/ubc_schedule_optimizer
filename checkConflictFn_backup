@@ -1,0 +1,89 @@
+import { courseData } from "./coursedata.js";
+
+// ---- helper functions ----
+const newArray = Object.values(courseData).flat();
+
+function timeHasConflict(Start1, End1, Start2, End2) {
+  const s1 = timeToMinutes(Start1);
+  const e1 = timeToMinutes(End1);
+  const s2 = timeToMinutes(Start2);
+  const e2 = timeToMinutes(End2);
+  return !(e2 < s1 || s2 > e1);
+}
+
+function timeToMinutes(timeStr) {
+  const [hour, min] = timeStr.split(":").map(Number);
+  return hour * 60 + min;
+}
+
+function dayHasConflict(dayArray1, dayArray2) {
+  return dayArray1.some(day => dayArray2.includes(day));
+}
+
+function hasConflict(course1, course2) {
+  return (
+    dayHasConflict(course1.days, course2.days) &&
+    timeHasConflict(course1.start, course1.end, course2.start, course2.end)
+  );
+}
+
+function eachTypeNoConflict(selectedArray) {
+  for (let i = 0; i < selectedArray.length; i++) {
+    for (let j = i + 1; j < selectedArray.length; j++) {
+      if (
+        selectedArray[i].name === selectedArray[j].name &&
+        selectedArray[i].type === selectedArray[j].type
+      ) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function checkAllConflicts(selectedArray) {
+  for (let i = 0; i < selectedArray.length; i++) {
+    for (let j = i + 1; j < selectedArray.length; j++) {
+      if (hasConflict(selectedArray[i], selectedArray[j])) return false;
+    }
+  }
+  return true;
+}
+
+// ---- validate schedule ----
+function validateSchedule(selected) {
+  if (!eachTypeNoConflict(selected)) return "Invalid: cannot take same-type sections";
+  if (!checkAllConflicts(selected)) return "Invalid: time conflict exists";
+  return "Valid schedule!";
+}
+
+// ---- generate schedules ----
+function generateScheduleArrays() {
+  const courseNames = Object.keys(courseData);
+  const results = [];
+
+  function backtrack(index, current) {
+    if (index === courseNames.length) {
+      if (validateSchedule(current) === "Valid schedule!") {
+        results.push([...current]);
+      }
+      return;
+    }
+
+    const sections = courseData[courseNames[index]];
+    for (let sec of sections) {
+      current.push(sec);
+      if (validateSchedule(current) === "Valid schedule!") {
+        backtrack(index + 1, current);
+      }
+      current.pop();
+    }
+  }
+
+  backtrack(0, []);
+
+  return results;
+}
+
+// ---- export to HTML ----
+export { validateSchedule, generateScheduleArrays };
