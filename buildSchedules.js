@@ -1,3 +1,5 @@
+import { validateSchedule } from "./checkConflictFn.js";
+
 function generateScheduleArrays(selectedCourses) {
     const results = [];
   

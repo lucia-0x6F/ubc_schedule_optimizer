@@ -1,8 +1,9 @@
+// App.jsx
 import React from "react";
 import TopBar from "./TopBar.jsx";
 import CourseSearch from "./CourseSearch.jsx";
 
-function App() {
+export default function App() {
   return (
     <>
       <TopBar />
@@ -10,5 +11,3 @@ function App() {
     </>
   );
 }
-
-export default App;
