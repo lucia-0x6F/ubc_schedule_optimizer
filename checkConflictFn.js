@@ -1,4 +1,6 @@
 import { courseData } from "./coursedata.js";
+
+// ---- helper functions ----
 const newArray = Object.values(courseData).flat();
 
 // UBC classes end 10 mins early so time intervals are open (no equality conflict)
@@ -21,8 +23,10 @@ function dayHasConflict(dayArray1, dayArray2) {
 
 // conflict only if: same day + overlapping time
 function hasConflict(course1, course2) {
-  return dayHasConflict(course1.days, course2.days) &&
-         timeHasConflict(course1.start, course1.end, course2.start, course2.end);
+  return (
+    dayHasConflict(course1.days, course2.days) &&
+    timeHasConflict(course1.start, course1.end, course2.start, course2.end)
+  );
 }
 
 // get all sections of given course name
@@ -34,8 +38,10 @@ function getCourseSections(name) {
 function eachTypeNoConflict(selectedArray) {
   for (let i = 0; i < selectedArray.length; i++) {
     for (let j = i + 1; j < selectedArray.length; j++) {
-      if (selectedArray[i].name === selectedArray[j].name &&
-          selectedArray[i].type === selectedArray[j].type) {
+      if (
+        selectedArray[i].name === selectedArray[j].name &&
+        selectedArray[i].type === selectedArray[j].type
+      ) {
         return false;
       }
     }
@@ -47,51 +53,46 @@ function eachTypeNoConflict(selectedArray) {
 function checkAllConflicts(selectedArray) {
   for (let i = 0; i < selectedArray.length; i++) {
     for (let j = i + 1; j < selectedArray.length; j++) {
-      if (hasConflict(selectedArray[i], selectedArray[j])) {
-        return false;
-      }
+      if (hasConflict(selectedArray[i], selectedArray[j])) return false;
     }
   }
   return true;
 }
 
-// get selected classes based on user input
-function getUserSelectedCourses() {
-  const selected = [];
-
-  while (true) {
-    const input = prompt("Enter course name (DONE to stop):");
-    if (input === "DONE") break;
-
-    if (courseData[input]) {
-      selected.push(...courseData[input]);
-    } else {
-      console.log("Invalid course name:", input);
-    }
-  }
-  return selected;
-}
-
-// Final evaluation function
-function validateSchedule(selectedCourses) {
-  if (!eachTypeNoConflict(selectedCourses)) {
-    return "Invalid: cannot take two sections of same type for same course";
-  }
-
-  if (!checkAllConflicts(selectedCourses)) {
-    return "Invalid: time conflict exists";
-  }
-
+// ---- validate schedule ----
+function validateSchedule(selected) {
+  if (!eachTypeNoConflict(selected)) return "Invalid: cannot take same-type sections";
+  if (!checkAllConflicts(selected)) return "Invalid: time conflict exists";
   return "Valid schedule!";
 }
 
-const selectedCourses = getUserSelectedCourses();
-console.log(validateSchedule(selectedCourses));
+// ---- generate schedules ----
+function generateScheduleArrays() {
+  const courseNames = Object.keys(courseData);
+  const results = [];
 
-window.validateSchedule = validateSchedule;
-window.getUserSelectedCourses = getUserSelectedCourses;
-window.getCourseSections = getCourseSections;
-window.hasConflict = hasConflict;
+  function backtrack(index, current) {
+    if (index === courseNames.length) {
+      if (validateSchedule(current) === "Valid schedule!") {
+        results.push([...current]);
+      }
+      return;
+    }
 
-export { validateSchedule };
+    const sections = courseData[courseNames[index]];
+    for (let sec of sections) {
+      current.push(sec);
+      if (validateSchedule(current) === "Valid schedule!") {
+        backtrack(index + 1, current);
+      }
+      current.pop();
+    }
+  }
 
+  backtrack(0, []);
+
+  return results;
+}
+
+// ---- export to HTML ----
+export { validateSchedule, generateScheduleArrays };
