@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ScheduleGrid from "./ScheduleGrid.jsx"; // ⬅️ calendar grid
 
 const UBC_COURSES = [
   // CPSC
@@ -27,7 +28,7 @@ const UBC_COURSES = [
 export default function CourseSearch() {
   const [query, setQuery] = useState("");
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [hovered, setHovered] = useState(null); // which delete button is hovered
+  const [hovered, setHovered] = useState(null);
 
   const filteredCourses = UBC_COURSES.filter((course) =>
     course.toLowerCase().includes(query.toLowerCase())
@@ -37,7 +38,7 @@ export default function CourseSearch() {
     if (!selectedCourses.includes(course)) {
       setSelectedCourses([...selectedCourses, course]);
     }
-    setQuery(""); // clear search after selection
+    setQuery("");
   };
 
   const handleRemoveCourse = (courseToRemove) => {
@@ -46,8 +47,9 @@ export default function CourseSearch() {
 
   return (
     <div style={styles.page}>
-      {/* LEFT: search + selected courses */}
+      {/* LEFT column */}
       <div style={styles.leftColumn}>
+
         {/* Search bar */}
         <div style={styles.searchWrapper}>
           <span style={styles.icon}>🔍</span>
@@ -88,6 +90,7 @@ export default function CourseSearch() {
                 <div key={course} style={styles.selectedChip}>
                   <span>{course}</span>
 
+                  {/* delete button */}
                   <button
                     type="button"
                     style={{
@@ -107,12 +110,11 @@ export default function CourseSearch() {
           </div>
         )}
       </div>
-
-      {/* RIGHT: calendar placeholder (empty for now) */}
+      {/* RIGHT column: schedule grid */}
       <div style={styles.rightColumn}>
-        {/* Later you can put your calendar component here */}
-        {/* <Calendar /> */}
+        <ScheduleGrid />
       </div>
+
     </div>
   );
 }
@@ -128,17 +130,15 @@ const styles = {
   },
 
   leftColumn: {
-    flex: "0 0 360px", // fixed-ish width for search area
+    flex: "0 0 360px",
   },
 
   rightColumn: {
-    flex: 1, // takes the remaining space (for your future calendar)
-    minHeight: "200px",
-    // optional: uncomment this to see the area
-    // border: "1px dashed #e5e7eb",
-    // borderRadius: "8px",
+    flex: 1,
+    minHeight: "400px",
   },
 
+  // Search bar
   searchWrapper: {
     display: "flex",
     alignItems: "center",
@@ -159,9 +159,9 @@ const styles = {
     outline: "none",
     background: "transparent",
     fontSize: "14px",
-    color: "#333",
   },
 
+  // Search results list
   resultsList: {
     marginTop: "8px",
     padding: "4px 0",
@@ -184,34 +184,37 @@ const styles = {
     color: "#888",
   },
 
+  // Selected courses section
   selectedWrapper: {
     marginTop: "16px",
   },
   selectedTitle: {
     fontSize: "14px",
     fontWeight: 600,
-},
-selectedList: {
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "8px",
-},
-selectedChip: {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "6px",
-  padding: "4px 10px",
-  borderRadius: "999px",
-  backgroundColor: "#3B82F6",
-  color: "#ffffff",
-  fontSize: "13px",
-},
-deleteButton: {
-  border: "none",
-  background: "transparent",
-  cursor: "pointer",
-  fontSize: "14px",
-  padding: 0,
-  lineHeight: 1,
-},
+    marginBottom: "16px", // extra spacing between title and chips
+  },
+  selectedList: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "8px",
+  },
+  selectedChip: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "4px 10px",
+    borderRadius: "999px",
+    backgroundColor: "#3B82F6",
+    color: "#ffffff",
+    fontSize: "13px",
+  },
+  deleteButton: {
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+    fontSize: "14px",
+    padding: 0,
+    lineHeight: 1,
+  },
 };
+

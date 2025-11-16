@@ -10,8 +10,11 @@ export default function TopBar() {
           style={styles.logo}
         />
 
-        <span style={styles.brandMain}>Opti</span>
-        <span style={styles.brandSub}>Schedule</span>
+        {/* Tight OptiSchedule title */}
+        <div style={styles.titleWrapper}>
+          <span style={styles.brandMain}>Opti</span>
+          <span style={styles.brandSub}>Schedule</span>
+        </div>
       </div>
 
       <div style={styles.right}>
@@ -31,34 +34,44 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "10px 24px",
-    background: "#3B82F6", // lighter clean blue
-    color: "#ffffff",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+
+    padding: "6px 20px",
+    background: "#dfffe0", // light green
+    color: "#333",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
   },
 
   left: {
     display: "flex",
     alignItems: "center",
-    gap: 4, // ⭐ tighter spacing between logo & Opti
+    gap: 6,
   },
 
   logo: {
-    height: "60px",  // matches Opti text size
+    height: "45px",   // ⭐ large logo
     width: "auto",
     objectFit: "contain",
-    marginRight: "0px", // ⭐ removed extra spacing
+  },
+
+  /* Keep Opti + Schedule tight together */
+  titleWrapper: {
+    display: "flex",
+    alignItems: "baseline",   // ⭐ aligns “Schedule” to baseline of Opti
+    gap: 3,                   // ⭐ tiny gap only
   },
 
   brandMain: {
-    fontSize: "24px",
+    fontSize: "28px",         // ⭐ larger
     fontWeight: 700,
+    color: "#3B82F6",         // blue
+    lineHeight: 1,
   },
 
   brandSub: {
-    fontSize: "16px",
-    opacity: 0.85,
-    marginLeft: "2px", // small spacing between Opti & Schedule
+    fontSize: "18px",         // ⭐ smaller than Opti
+    fontWeight: 600,
+    color: "#16A34A",         // green
+    marginTop: "4px",         // ⭐ visually aligns with Opti
   },
 
   right: {
@@ -67,14 +80,13 @@ const styles = {
   },
 
   button: {
-    padding: "6px 16px",
+    backgroundColor: "#ffffff",
+    color: "#333",
+    padding: "6px 14px",
     borderRadius: "999px",
-    border: "1px solid #ffffff",
-    background: "transparent",
-    color: "#ffffff",
+    border: "1px solid #c7c7c7",
     fontSize: "13px",
     cursor: "pointer",
     whiteSpace: "nowrap",
   },
 };
-
