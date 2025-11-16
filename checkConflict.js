@@ -1,5 +1,24 @@
 import {courseData} from "./coursedata.js"
 const newArray = Object.values(courseData).flat();
+
+function getUserSelectedCourses() {
+  const selected = []; 
+  
+  while (true) {
+      const input = prompt("Enter course name (DONE to stop):");
+      if (input === "DONE") break;
+
+      if (courseData[input]) {
+          selected.push(...courseData[input]);
+      } else {
+          console.log("Invalid course name:", input);
+      }
+  }
+  return selected;
+}
+
+
+// UBC classes end 10 mins early so time intervals are open (no equality conflict)
 function timeHasConflict(Start1, End1, Start2, End2) {
     const s1 = timeToMinutes(Start1)
     const e1 = timeToMinutes(End1)
@@ -25,7 +44,26 @@ function getCourseSections (name){
     return newArray.filter(item => item.name === name)
 }
 
-function getCorrespondingInformation() {
-    const inputName = getName();
-    return newArray.filter(item => item.name === inputName);
+function eachTypeNoConflict(selectedArray) {
+  for (let i = 0; i < selectedArray.length; i++) {
+    for (let j = i + 1; j < selectedArray.length; j++) {
+
+      if (selectedArray[i].name === selectedArray[j].name &&
+          selectedArray[i].type === selectedArray[j].type) {
+        return false; 
+      }
+    }
   }
+  return true;
+}
+
+if (!eachTypeNoConflict(selectedCourses)) return "Invalid";
+
+if (!hasConflict(selectedCourses)) return "Time conflict exists";
+
+return "Valid schedule";
+
+
+
+
+
